@@ -4,17 +4,17 @@ import { getUsers } from "../../store/slices/table.slice";
 import "./Table.scss";
 
 const Table = () => {
-  const user = useSelector((state) => state.user);
-    const dispatch = useDispatch();
+  const { users, isLoading } = useSelector((state) => state.userSlice);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getUsers())
-        console.log(user.users, 'asssd');
-    },[dispatch, user.users])
-    
+  useEffect(() => {
+    dispatch(getUsers())
+
+  }, [dispatch])
+
   return (
-      <div className="tb-wrapper">
-      {!user.isLoading && (
+    <div className="tb-wrapper">
+      {isLoading && (
         <div className="lds-ring">
           <div></div>
           <div></div>
@@ -22,25 +22,36 @@ const Table = () => {
           <div></div>
         </div>
       )}
-      {user.isLoading && user.users.length ? (
+      {!isLoading && users.length ? (
         <table>
           <thead>
             <tr>
-              <th>id</th>
-              <th>name</th>
-              <th>email</th>
-              <th>city</th>
-              <th>street</th>
-              <th>zipcode</th>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>City</th>
+              <th>Street</th>
+              <th>Zipcode</th>
             </tr>
           </thead>
           <tbody>
-         
-         
+              {
+               users.map(item => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item.address.city}</td>
+                  <td>{item.address.street}</td>
+                  <td>{item.address.zipcode}</td>
+                </tr>
+               ))
+              }
+
           </tbody>
         </table>
-        ) : null}
-        </div>
+      ) : null}
+    </div>
   );
 };
 
